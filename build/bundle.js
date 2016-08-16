@@ -21536,7 +21536,8 @@
 			_this.updateMessage = _this.updateMessage.bind(_this);
 			_this.state = {
 				username: '',
-				message: ''
+				message: '',
+				thread: []
 			};
 			return _this;
 		}
@@ -21548,12 +21549,16 @@
 					username: this.state.username,
 					message: this.state.message
 				};
-				console.log('submit: ' + JSON.stringify(pkg));
+	
+				var thread = Object.assign([], this.state.thread);
+				thread.push(pkg);
+				this.setState({
+					thread: thread
+				});
 			}
 		}, {
 			key: 'updateUsername',
 			value: function updateUsername(event) {
-				console.log('updateUsername: ' + event.target.value);
 				this.setState({
 					username: event.target.value
 				});
@@ -21561,7 +21566,6 @@
 		}, {
 			key: 'updateMessage',
 			value: function updateMessage(event) {
-				console.log('updateMessage: ' + event.target.value);
 				this.setState({
 					message: event.target.value
 				});
@@ -21569,6 +21573,15 @@
 		}, {
 			key: 'render',
 			value: function render() {
+				var conversation = this.state.thread.map(function (msg, i) {
+					return _react2.default.createElement(
+						'li',
+						{ key: i },
+						msg.username,
+						' - ',
+						msg.message
+					);
+				});
 				return _react2.default.createElement(
 					'div',
 					null,
@@ -21582,6 +21595,16 @@
 						'button',
 						{ onClick: this.submit },
 						'Send Message'
+					),
+					_react2.default.createElement(
+						'h2',
+						null,
+						'Conversation'
+					),
+					_react2.default.createElement(
+						'ul',
+						null,
+						conversation
 					)
 				);
 			}
