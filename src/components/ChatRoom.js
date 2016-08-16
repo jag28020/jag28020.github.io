@@ -31,7 +31,6 @@ class ChatRoom extends Component {
 			_this.setState({
 				thread: thread
 			})
-
 		})
 	}
 
