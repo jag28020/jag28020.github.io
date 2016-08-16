@@ -14,17 +14,36 @@ class ChatRoom extends Component {
 		}
 	}
 
+	componentDidMount(){
+		var _this = this
+		firebase.database().ref('messages/').on('value', function(snapshop){
+			var currentThread = snapshop.val()
+			console.log(JSON.stringify(currentThread))
+
+			var timestamps = Object.keys(currentThread)
+			timestamps.sort()
+			var thread = []
+			for (var i=0; i<timestamps.length; i++){
+				var timestamp = timestamps[i]
+				var pkg = currentThread[timestamp]
+				thread.push(pkg)
+			}
+			_this.setState({
+				thread: thread
+			})
+
+		})
+	}
+
 	submit(event){
 		var pkg = {
 			username: this.state.username,
-			message: this.state.message
+			message: this.state.message,
+			id: Math.floor(Date.now() / 1000)
 		}
 
-		var thread = Object.assign([], this.state.thread)
-		thread.push(pkg)
-		this.setState({
-			thread: thread
-		})
+		console.log(JSON.stringify(pkg))
+		firebase.database().ref('messages/'+pkg.id).set(pkg)		
 	}
 
 	updateUsername(event){
